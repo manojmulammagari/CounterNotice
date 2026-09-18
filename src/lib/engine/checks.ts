@@ -1,4 +1,4 @@
-﻿import type { ExtractedFacts, RuleOutcome } from './types';
+import type { ExtractedFacts, RuleOutcome } from './types';
 
 export const CHECKS: Record<string, (facts: ExtractedFacts) => RuleOutcome> = {
 

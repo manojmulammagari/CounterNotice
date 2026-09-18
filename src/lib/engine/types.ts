@@ -1,4 +1,4 @@
-﻿export type NoticeType = 'nonpayment_eviction' | 'rent_increase' | 'entry_or_repair' | 'unknown';
+export type NoticeType = 'nonpayment_eviction' | 'rent_increase' | 'entry_or_repair' | 'unknown';
 export type DeliveryMethod = 'hand_delivered' | 'mail' | 'taped_to_door' | 'unknown';
 export type RuleStatus = 'violation' | 'pass' | 'unknown';
 export type Severity = 'fatal' | 'serious' | 'minor';

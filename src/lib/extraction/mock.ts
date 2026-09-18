@@ -1,4 +1,4 @@
-﻿import type { ExtractedFacts } from "@/lib/engine/types";
+import type { ExtractedFacts } from "@/lib/engine/types";
 
 // ────────────────────────────────────────────────────────────────────
 // Mock extraction fixtures

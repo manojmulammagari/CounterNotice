@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import rulesetJson from '../../rules/tx-24-005.rules.json';
 import type { ExtractedFacts, Ruleset } from '../types';
 import { evaluateNotice } from '../evaluate';

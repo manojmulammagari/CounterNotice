@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { evaluateNotice } from "@/lib/engine/evaluate";
 import type { Ruleset } from "@/lib/engine/types";
 import {

@@ -1,4 +1,4 @@
-﻿import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import type { ExtractedFacts } from "@/lib/engine/types";
 
 // ── Gemini response schema ──────────────────────────────────────────
