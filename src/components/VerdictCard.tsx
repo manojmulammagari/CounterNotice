@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import type { EvaluationResult } from "@/lib/engine/types";
+import { useVoicePlayer, voiceKeyForResult } from "@/lib/voice/player";
 
 // ── Tone ────────────────────────────────────────────────────────────────────
 
@@ -36,30 +37,6 @@ function getBody(result: EvaluationResult): string | null {
   return result.message;
 }
 
-// ── Read-aloud ───────────────────────────────────────────────────────────────
-
-function buildScript(result: EvaluationResult): string {
-  const title = getTitle(result);
-  const parts = [title];
-  if (result.kind === "evaluated" && result.violations.length > 0) {
-    for (const v of result.violations) {
-      parts.push(v.plain_language);
-    }
-  }
-  parts.push("This is legal information, not legal advice.");
-  return parts.join(". ");
-}
-
-function speakText(text: string) {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  // TODO: replace window.speechSynthesis with Kokoro TTS in the final step
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = "en-US";
-  utt.rate = 0.9;
-  window.speechSynthesis.speak(utt);
-}
-
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function VerdictCard({ result }: { result: EvaluationResult }) {
@@ -67,7 +44,18 @@ export function VerdictCard({ result }: { result: EvaluationResult }) {
   const { bg, border, icon } = TONE_STYLES[tone];
   const title = getTitle(result);
   const body = getBody(result);
-  const script = buildScript(result);
+
+  const { play, playing } = useVoicePlayer();
+  const voiceKey = voiceKeyForResult(
+    result.kind,
+    result.kind === "evaluated" ? result.violations.length : 0,
+    result.kind === "evaluated" ? result.unknowns.length : 0
+  );
+  
+  // Use the exact engine headline if possible, otherwise message
+  const phraseText = result.kind === "evaluated" 
+    ? result.headline 
+    : (result as Record<string, string>).message || "CounterNotice result.";
 
   return (
     <section
@@ -95,10 +83,12 @@ export function VerdictCard({ result }: { result: EvaluationResult }) {
       {/* Read-aloud button */}
       <button
         type="button"
-        onClick={() => speakText(script)}
-        className="mt-4 min-h-[44px] rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 active:scale-95"
+        onClick={() => play(voiceKey, phraseText)}
+        disabled={playing}
+        className="no-print mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-amber-100 px-4 py-2.5 text-sm font-bold text-amber-900 shadow-sm transition-transform hover:bg-amber-200 active:scale-[0.98] disabled:opacity-60"
+        aria-label="Read this verdict aloud"
       >
-        🔊 Read this out loud
+        {playing ? "Speaking..." : "🔊 Read my rights aloud"}
       </button>
     </section>
   );

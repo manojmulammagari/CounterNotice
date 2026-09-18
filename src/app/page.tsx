@@ -179,6 +179,14 @@ export default function Home() {
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    
+    // DEMO LOCK: If we are in demo mode, intercept live photos and serve a fixture
+    const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+    if (demoMode) {
+      void analyze({ mode: "demo", fixture: "defective" });
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       try {
