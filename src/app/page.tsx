@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef, useState } from "react";
 import type { AnalyzeResponse } from "@/lib/api/types";
@@ -7,28 +7,40 @@ import type { DeadlineResult } from "@/lib/deadline/compute";
 import { VerdictCard } from "@/components/VerdictCard";
 import { DeadlineShield } from "@/components/DeadlineShield";
 import { WhyPanel } from "@/components/WhyPanel";
+import ResponseLetter from "@/components/ResponseLetter";
+import {
+  generateDisputeLetter,
+  generateNegotiationLetter,
+} from "@/lib/letter/template";
 
 // ── Sample chips ─────────────────────────────────────────────────────────────
 
 const SAMPLES = [
-  { fixture: "defective",        label: "2-day notice, taped on the door" },
-  { fixture: "clean",            label: "Clean 3-day notice" },
-  { fixture: "lease_override",   label: "Lease says 2 days" },
-  { fixture: "unreadable",       label: "Blurry photo" },
-  { fixture: "out_of_state",     label: "Notice from Florida" },
-  { fixture: "posted_and_mailed",label: "Posted and also mailed" },
-  { fixture: "unknown_type",     label: "Unrecognized paper" },
+  { fixture: "defective",         label: "2-day notice, taped on the door" },
+  { fixture: "clean",             label: "Clean 3-day notice" },
+  { fixture: "lease_override",    label: "Lease says 2 days" },
+  { fixture: "unreadable",        label: "Blurry photo" },
+  { fixture: "out_of_state",      label: "Notice from Florida" },
+  { fixture: "posted_and_mailed", label: "Posted and also mailed" },
+  { fixture: "unknown_type",      label: "Unrecognized paper" },
 ] as const;
 
-// ── State machine ────────────────────────────────────────────────────────────
+// ── State machine ─────────────────────────────────────────────────────────────
+
+type DoneData = {
+  evaluation: EvaluationResult;
+  facts: ExtractedFacts;
+  deadline: DeadlineResult | null;
+  generatedAt: string;
+};
 
 type PageState =
   | { status: "idle" }
   | { status: "loading" }
-  | { status: "done"; data: { evaluation: EvaluationResult; facts: ExtractedFacts; deadline: DeadlineResult | null } }
+  | { status: "done"; data: DoneData }
   | { status: "error"; message: string };
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function sleep(ms: number) {
   return new Promise<void>((r) => setTimeout(r, ms));
@@ -43,35 +55,39 @@ async function callAnalyze(body: Record<string, unknown>): Promise<AnalyzeRespon
   return res.json() as Promise<AnalyzeResponse>;
 }
 
-// ── Results component ────────────────────────────────────────────────────────
+// ── Results component ─────────────────────────────────────────────────────────
 
-function Results({
-  data,
-  onReset,
-}: {
-  data: { evaluation: EvaluationResult; facts: ExtractedFacts; deadline: DeadlineResult | null };
-  onReset: () => void;
-}) {
+function Results({ data, onReset }: { data: DoneData; onReset: () => void }) {
   const ev = data.evaluation;
+
   return (
     <div className="space-y-5">
       <VerdictCard result={ev} />
+
       {ev.kind === "evaluated" && <DeadlineShield deadline={data.deadline} />}
+
       {ev.kind === "evaluated" && ev.violations.length > 0 && (
         <WhyPanel findings={ev.violations} facts={data.facts} />
       )}
+
       {ev.kind === "evaluated" && ev.unknowns.length > 0 && (
         <section className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-          <h2 className="text-lg font-bold text-amber-900">What we could not check</h2>
+          <h2 className="text-lg font-bold text-amber-900">
+            What we could not check
+          </h2>
           <ul className="mt-3 space-y-2">
             {ev.unknowns.map((f) => (
-              <li key={f.rule_id} className="text-sm leading-relaxed text-amber-900">
+              <li
+                key={f.rule_id}
+                className="text-sm leading-relaxed text-amber-900"
+              >
                 • <strong>{f.title}.</strong> {f.explanation}
               </li>
             ))}
           </ul>
         </section>
       )}
+
       {ev.kind === "evaluated" && ev.passes.length > 0 && (
         <details className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <summary className="cursor-pointer text-sm font-bold text-slate-900">
@@ -86,6 +102,40 @@ function Results({
           </ul>
         </details>
       )}
+
+      {/* Dispute letter — only when there are actual violations */}
+      {ev.kind === "evaluated" && ev.violations.length > 0 && (
+        <ResponseLetter
+          text={generateDisputeLetter({
+            facts: data.facts,
+            findings: ev.violations,
+            deadline: data.deadline,
+            generatedAtIso: data.generatedAt,
+          })}
+          source="template"
+          facts={data.facts}
+          findings={ev.violations}
+          deadline={data.deadline}
+        />
+      )}
+
+      {/* Negotiation letter — only when everything passed cleanly (no violations, no unknowns) */}
+      {ev.kind === "evaluated" &&
+        ev.violations.length === 0 &&
+        ev.unknowns.length === 0 && (
+          <ResponseLetter
+            text={generateNegotiationLetter({
+              facts: data.facts,
+              deadline: data.deadline,
+              generatedAtIso: data.generatedAt,
+            })}
+            source="template"
+            facts={data.facts}
+            findings={[]}
+            deadline={data.deadline}
+          />
+        )}
+
       <button
         type="button"
         onClick={onReset}
@@ -97,7 +147,7 @@ function Results({
   );
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Home() {
   const [state, setState] = useState<PageState>({ status: "idle" });
@@ -117,6 +167,7 @@ export default function Home() {
           evaluation: resp.evaluation,
           facts: resp.facts,
           deadline: resp.deadline,
+          generatedAt: resp.generatedAt,
         },
       });
     } catch (err) {
@@ -136,11 +187,13 @@ export default function Home() {
         const base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
         void analyze({ mode: "live", imageBase64: base64 });
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Could not read the photo.";
+        const msg =
+          err instanceof Error ? err.message : "Could not read the photo.";
         setState({ status: "error", message: msg });
       }
     };
-    reader.onerror = () => setState({ status: "error", message: "Could not read the file." });
+    reader.onerror = () =>
+      setState({ status: "error", message: "Could not read the file." });
     reader.readAsDataURL(file);
   }
 
@@ -153,7 +206,8 @@ export default function Home() {
             CounterNotice
           </p>
           <p className="mt-0.5 text-sm text-slate-500">
-            Crumpled paper to cited defense in 20 seconds. Built for LexHack 2026.
+            Crumpled paper to cited defense in 20 seconds. Built for LexHack
+            2026.
           </p>
         </header>
 
@@ -165,8 +219,8 @@ export default function Home() {
                 Got an eviction notice?
               </h1>
               <p className="mt-3 text-base leading-relaxed text-slate-600">
-                Take a photo. We read it and check it against Texas law in about 20
-                seconds. Free. No sign-up.
+                Take a photo. We read it and check it against Texas law in about
+                20 seconds. Free. No sign-up.
               </p>
 
               {/* Photo button */}
@@ -184,8 +238,8 @@ export default function Home() {
                 />
               </label>
               <p className="mt-3 text-xs text-slate-500">
-                Photo reading needs an internet connection. On stage or offline? Use a
-                sample below.
+                Photo reading needs an internet connection. On stage or offline?
+                Use a sample below.
               </p>
             </div>
 
@@ -204,7 +258,9 @@ export default function Home() {
                 <button
                   key={s.fixture}
                   type="button"
-                  onClick={() => void analyze({ mode: "demo", fixture: s.fixture })}
+                  onClick={() =>
+                    void analyze({ mode: "demo", fixture: s.fixture })
+                  }
                   className="min-h-[44px] rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-white active:scale-95"
                 >
                   {s.label}
@@ -218,7 +274,9 @@ export default function Home() {
         {state.status === "loading" && (
           <div className="flex flex-col items-center gap-5 py-16">
             <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-slate-900" />
-            <p className="text-lg font-bold text-slate-800">Reading your notice…</p>
+            <p className="text-lg font-bold text-slate-800">
+              Reading your notice…
+            </p>
             <p className="text-sm text-slate-500">
               We are checking it against Texas law.
             </p>
@@ -228,7 +286,9 @@ export default function Home() {
         {/* Error */}
         {state.status === "error" && (
           <div className="rounded-2xl border border-red-200 bg-red-50 p-5 shadow-sm">
-            <h2 className="text-lg font-extrabold text-red-900">We hit a problem</h2>
+            <h2 className="text-lg font-extrabold text-red-900">
+              We hit a problem
+            </h2>
             <p className="mt-2 text-sm text-red-800">{state.message}</p>
             <button
               type="button"
@@ -250,8 +310,8 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-12 text-center text-xs text-slate-500">
-          CounterNotice gives legal information, not legal advice. It is not a lawyer
-          and cannot go to court for you. Built for LexHack 2026.
+          CounterNotice gives legal information, not legal advice. It is not a
+          lawyer and cannot go to court for you. Built for LexHack 2026.
         </footer>
       </div>
     </div>
