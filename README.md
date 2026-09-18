@@ -1,24 +1,22 @@
 <div align="center">
+  <h1>⚖️ CounterNotice</h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Inter&weight=800&size=40&pause=1000&color=F8FAFC&center=true&vCenter=true&width=800&height=90&lines=Notice+in.+Cited+defense+out.;Twenty+seconds.;LLM+extracts.+Rules+decide.+Humans+verify." />
+    <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=800&size=40&pause=1000&color=0F172A&center=true&vCenter=true&width=800&height=90&lines=Notice+in.+Cited+defense+out.;Twenty+seconds.;LLM+extracts.+Rules+decide.+Humans+verify." alt="CounterNotice — crumpled eviction notice in. Cited statutory defense out. Twenty seconds." />
+  </picture>
+  <p><i>A first-mile legal tool for the tenant with 72 hours, no lawyer, and everything to lose.</i></p>
 
-<h1>⚖️ CounterNotice</h1>
+  <h3>🟢 <a href="https://counter-notice-6sfo3xf0y-mulammagarimanoj-6234s-projects.vercel.app/"><b>Test the Live App Here</b></a> 🟢</h3>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Inter&weight=800&size=40&pause=1000&color=F8FAFC&center=true&vCenter=true&width=800&height=90&lines=Notice+in.+Cited+defense+out.;Twenty+seconds.;LLM+extracts.+Rules+decide.+Humans+verify." />
-  <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=800&size=40&pause=1000&color=0F172A&center=true&vCenter=true&width=800&height=90&lines=Notice+in.+Cited+defense+out.;Twenty+seconds.;LLM+extracts.+Rules+decide.+Humans+verify." alt="CounterNotice — crumpled eviction notice in. Cited statutory defense out. Twenty seconds." />
-</picture>
+  <img src="docs/demo.gif" alt="CounterNotice Demo — a crumpled notice becomes a cited defense letter in 20 seconds" width="100%" style="border-radius: 12px; margin: 20px 0;" />
 
-<p><i>A first-mile legal tool for the tenant with 72 hours, no lawyer, and everything to lose.</i></p>
-
-<img src="docs/demo.gif" alt="CounterNotice Demo — a crumpled notice becomes a cited defense letter in 20 seconds" width="100%" style="border-radius: 12px; margin: 20px 0;" />
-
-<p>
-  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" /></a>
-  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
-  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
-  <a href="https://ai.google.dev"><img src="https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Google Gemini" /></a>
-  <img src="https://img.shields.io/badge/LexHack_2026-Winner's_Build-1D4ED8?style=for-the-badge" alt="LexHack 2026" />
-</p>
-
+  <p>
+    <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" /></a>
+    <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
+    <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+    <a href="https://ai.google.dev"><img src="https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Google Gemini" /></a>
+    <img src="https://img.shields.io/badge/LexHack_2026-Winner's_Build-1D4ED8?style=for-the-badge" alt="LexHack 2026" />
+  </p>
 </div>
 
 <br />
