@@ -1,0 +1,72 @@
+﻿{
+  "ruleset_id": "TX-24.005-nonpayment",
+  "version": "0.1.0",
+  "verified_on": "2026-09-18",
+  "state": "TX",
+  "notice_type": "nonpayment_eviction",
+  "statute": {
+    "cite": "Tex. Prop. Code § 24.005",
+    "title": "Notice to Vacate Prior to Filing Eviction Suit",
+    "url": "https://statutes.capitol.texas.gov/Docs/PR/htm/PR.24.htm"
+  },
+  "glossary": [
+    { "term": "Notice to vacate", "plain_language": "A paper from your landlord telling you to leave your home." },
+    { "term": "Forcible detainer", "plain_language": "The court case a landlord files to make you leave. In Texas this is the eviction." },
+    { "term": "Default judgment", "plain_language": "You lose because you did not send an answer in time. You never got to tell your side." },
+    { "term": "Given in person or by mail", "plain_language": "The landlord handed you the paper, or put it in the U.S. mail. Just taping it to your door is not always enough." }
+  ],
+  "rules": [
+    {
+      "id": "TX-24.005-1",
+      "check_id": "notice_period_min_3_days",
+      "title": "The notice must give at least 3 days",
+      "plain_language": "The paper must give you at least 3 full days to act. If it gives you fewer days, and you have no written lease that says so, the paper has a problem.",
+      "severity": "fatal",
+      "basis": "statute",
+      "statute": {
+        "cite": "Tex. Prop. Code § 24.005",
+        "subsection": "(a)",
+        "quote": "the landlord must give a tenant who defaults or holds over beyond the end of the rental term or renewal period at least three days' written notice to vacate the premises before the landlord files a forcible detainer suit, unless the parties have contracted for a shorter or longer notice period in a written lease or agreement",
+        "url": "https://statutes.capitol.texas.gov/Docs/PR/htm/PR.24.htm"
+      },
+      "exceptions": [
+        { "when": "a written lease sets a different notice period",
+          "effect": "the lease number controls, not the 3-day number",
+          "statute_quote": "unless the parties have contracted for a shorter or longer notice period in a written lease or agreement" }
+      ]
+    },
+    {
+      "id": "TX-24.005-2",
+      "check_id": "delivered_in_person_or_by_mail",
+      "title": "The notice must be handed to you or mailed to you",
+      "plain_language": "The landlord must give the paper to you in person or send it in the mail. Taping it to your door is not always enough.",
+      "severity": "fatal",
+      "basis": "statute",
+      "statute": {
+        "cite": "Tex. Prop. Code § 24.005",
+        "subsection": "(f)",
+        "quote": "Except as provided by Subsection (f-1), the notice to vacate shall be given in person or by mail at the premises in question.",
+        "url": "https://statutes.capitol.texas.gov/Docs/PR/htm/PR.24.htm"
+      },
+      "exceptions": [
+        { "when": "the premises has no mailbox and has a keyless bolting device, alarm system, or dangerous animal that prevents the landlord from entering to affix the notice inside the main entry door; or the landlord reasonably believes harm would result from personal delivery",
+          "effect": "posting a sealed envelope on the outside of the main entry door is allowed if a copy is also mailed the same day before 5 p.m.",
+          "statute_quote": "As an alternative to the procedures of Subsection (f), a landlord may deliver the notice to vacate by securely affixing to the outside of the main entry door a sealed envelope that contains the notice and on which is written the tenant's name, address, and in all capital letters, the words \u201cIMPORTANT DOCUMENT\u201d or substantially similar language and, not later than 5 p.m. of the same day, depositing in the mail in the same county in which the premises in question is located a copy of the notice to the tenant" }
+      ]
+    },
+    {
+      "id": "TX-24.005-3",
+      "check_id": "demands_possession_unconditionally",
+      "title": "The notice must clearly demand that you leave",
+      "plain_language": "The paper must tell you to leave the home. If it only asks for money and never tells you to leave, the paper may have a problem.",
+      "severity": "serious",
+      "basis": "case_law_pending",
+      "statute": {
+        "cite": "Tex. Prop. Code § 24.005",
+        "subsection": "",
+        "quote": "",
+        "url": "https://statutes.capitol.texas.gov/Docs/PR/htm/PR.24.htm"
+      }
+    }
+  ]
+}
