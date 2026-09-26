@@ -198,7 +198,7 @@ scripts/generate-voice.py         # Kokoro-82M pre-render script
 ## 🚀 Quick Start & Verification
 
 ```bash
-git clone https://github.com/your-org/counternotice.git
+git clone https://github.com/manojmulammagari/CounterNotice.git
 cd counternotice
 npm install
 
